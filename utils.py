@@ -8,12 +8,15 @@ import torch.nn.functional as F
 
 from tqdm import tqdm
 
-NAIP_2013_MEANS = np.array([117.00, 130.75, 122.50, 159.30])
-NAIP_2013_STDS = np.array([38.16, 36.68, 24.30, 66.22])
-NAIP_2017_MEANS = np.array([72.84,  86.83, 76.78, 130.82])
-NAIP_2017_STDS = np.array([41.78, 34.66, 28.76, 58.95])
-NLCD_CLASSES = [ 0, 11, 12, 21, 22, 23, 24, 31, 41, 42, 43, 52, 71, 81, 82, 90, 95] # 16 classes + 1 nodata class ("0"). Note that "12" is "Perennial Ice/Snow" and is not present in Maryland.
+# Changed the means and std from original documentation
+NAIP_2013_MEANS = np.array([83.18, 79.00, 55.65])
+NAIP_2013_STDS = np.array([13.83,  9.16, 10.09])
+NAIP_2017_MEANS = np.array([80.80, 79.22, 54.69])
+NAIP_2017_STDS = np.array([9.35 , 5.94, 6.79])
 
+NLCD_CLASSES = [ 0, 1, 2] # 16 classes + 1 nodata class ("0"). Note that "12" is "Perennial Ice/Snow" and is not present in Maryland.
+
+'''
 NLCD_CLASS_COLORMAP = { # Copied from the emebedded color table in the NLCD data files
     0:  (0, 0, 0, 255),
     11: (70, 107, 159, 255),
@@ -32,14 +35,18 @@ NLCD_CLASS_COLORMAP = { # Copied from the emebedded color table in the NLCD data
     82: (171, 108, 40, 255),
     90: (184, 217, 235, 255),
     95: (108, 159, 184, 255)
+}'''
+
+NLCD_CLASS_COLORMAP = { # Copied from the emebedded color table in the NLCD data files
+    0:  (0, 0, 0, 255),
+    2: (235, 0, 0, 255),
+    1: (28, 95, 44, 255)
 }
 
 LC4_CLASS_COLORMAP = {
-    0: (0, 0, 255, 255),
-    1: (0, 128, 0, 255),
-    2: (128, 255, 128, 255),
-    3: (128, 96, 96, 255),
-    4: (0, 0, 0, 255)
+    0: (0, 0, 255, 255), # Blue
+    1: (0, 128, 0, 255), #Green
+    2: (128, 96, 96, 255) # Red shade
 }
 
 
@@ -64,43 +71,43 @@ NLCD_CLASS_TO_IDX_MAP = get_nlcd_class_to_idx_map() # I do this computation on i
 
 
 NLCD_IDX_TO_REDUCED_LC_MAP = np.array([
-    4,#  0 No data 0
+    0,#  0 No data 0
     0,#  1 Open Water
-    4,#  2 Ice/Snow
+    0,#  2 Ice/Snow
     2,#  3 Developed Open Space
-    3,#  4 Developed Low Intensity
-    3,#  5 Developed Medium Intensity
-    3,#  6 Developed High Intensity
-    3,#  7 Barren Land
+    2,#  4 Developed Low Intensity
+    2,#  5 Developed Medium Intensity
+    2,#  6 Developed High Intensity
+    2,#  7 Barren Land
     1,#  8 Deciduous Forest
     1,#  9 Evergreen Forest
     1,# 10 Mixed Forest
     1,# 11 Shrub/Scrub
-    2,# 12 Grassland/Herbaceous
-    2,# 13 Pasture/Hay
-    2,# 14 Cultivated Crops
+    1,# 12 Grassland/Herbaceous
+    1,# 13 Pasture/Hay
+    1,# 14 Cultivated Crops
     1,# 15 Woody Wetlands
     1,# 16 Emergent Herbaceious Wetlands
 ])
 
 NLCD_IDX_TO_REDUCED_LC_ACCUMULATOR = np.array([
-    [0,0,0,0,1],#  0 No data 0
-    [1,0,0,0,0],#  1 Open Water
-    [0,0,0,0,1],#  2 Ice/Snow
-    [0,0,0,0,0],#  3 Developed Open Space
-    [0,0,0,0,0],#  4 Developed Low Intensity
-    [0,0,0,1,0],#  5 Developed Medium Intensity
-    [0,0,0,1,0],#  6 Developed High Intensity
-    [0,0,0,0,0],#  7 Barren Land
-    [0,1,0,0,0],#  8 Deciduous Forest
-    [0,1,0,0,0],#  9 Evergreen Forest
-    [0,1,0,0,0],# 10 Mixed Forest
-    [0,1,0,0,0],# 11 Shrub/Scrub
-    [0,0,1,0,0],# 12 Grassland/Herbaceous
-    [0,0,1,0,0],# 13 Pasture/Hay
-    [0,0,1,0,0],# 14 Cultivated Crops
-    [0,1,0,0,0],# 15 Woody Wetlands
-    [0,1,0,0,0],# 16 Emergent Herbaceious Wetlands
+    [1,0,0],#  0 No data 0
+    [1,0,0],#  1 Open Water
+    [1,0,0],#  2 Ice/Snow
+    [0,0,1],#  3 Developed Open Space
+    [0,0,1],#  4 Developed Low Intensity
+    [0,0,1],#  5 Developed Medium Intensity
+    [0,0,1],#  6 Developed High Intensity
+    [0,0,1],#  7 Barren Land
+    [0,1,0],#  8 Deciduous Forest
+    [0,1,0],#  9 Evergreen Forest
+    [0,1,0],# 10 Mixed Forest
+    [0,1,0],# 11 Shrub/Scrub
+    [0,1,0],# 12 Grassland/Herbaceous
+    [0,1,0],# 13 Pasture/Hay
+    [0,1,0],# 14 Cultivated Crops
+    [0,1,0],# 15 Woody Wetlands
+    [0,1,0],# 16 Emergent Herbaceious Wetlands
 ])
 
 class Timer():
