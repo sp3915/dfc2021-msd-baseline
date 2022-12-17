@@ -36,11 +36,11 @@ class FCN(nn.Module):
 def get_unet():
     return smp.Unet(
         encoder_name='resnet18', encoder_depth=3, encoder_weights=None,
-        decoder_channels=(128, 64, 64), in_channels=4, classes=len(utils.NLCD_CLASSES)
+        decoder_channels=(128, 64, 64), in_channels=3, classes=len(utils.NLCD_CLASSES)
     )
 
 def get_fcn():
-    return FCN(num_input_channels=4, num_output_classes=len(utils.NLCD_CLASSES), num_filters=64)
+    return FCN(num_input_channels=3, num_output_classes=len(utils.NLCD_CLASSES), num_filters=64)
 
 
 def get_hrnet():
@@ -51,7 +51,7 @@ def get_hrnet():
         "MODEL": {
             "EXTRA": {
                 "FINAL_CONV_KERNEL": 1,
-                "NUM_INPUT_CHANNELS": 4
+                "NUM_INPUT_CHANNELS": 3
             }
         }
     }
