@@ -11,6 +11,13 @@ Download this repo and upload the total folder(dfc2021-msd-baseline-master) onto
 
 Upload Repo_implementation.ipynb onto colab and run the script with GPUs.
 
+Note: Make sure that the data/image files is accessible. The data/image locations are in csv format in data/splits folder. 
+
+NICFI 2016: https://drive.google.com/drive/folders/1nMKtW5NV9PVwn5o949Gf3vxp0pAvZYmY?usp=sharing
+NICFI 2019: https://drive.google.com/drive/folders/10HAtB0LNClpzI7hS2O6Io6pObc29TZ0h?usp=sharing
+Dyanmic world 2016: https://drive.google.com/drive/folders/1r7_VfQvOKU_xxZawAlNB9UfAna_CyHlA?usp=sharing
+Dyanmic world 2019: https://drive.google.com/drive/folders/1ql9Ypxhh6MAZNC7flpPUQWutnfL8z2Zo?usp=sharing
+
 ### `U-Net both` baseline
 
 ```
