@@ -9,7 +9,7 @@ Forked from https://github.com/calebrob6/dfc2021-msd-baseline
 The following will setup up a conda environment suitable for running the scripts in this repo:
 Download this repo and upload the total folder(dfc2021-msd-baseline-master) onto your Google Drive.
 
-Upload Repo_implementation.ipynb onto colab and run the script with GPUs.
+Upload Repo_implementation.ipynb (https://github.com/sp3915/dfc2021-msd-baseline/blob/master/Repo_implementation.ipynb) onto colab and run the script with GPUs.
 
 Note: Make sure that the data/image files is accessible. The data/image locations are in csv format in data/splits folder. 
 
